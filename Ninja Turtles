@@ -1,0 +1,118 @@
+-- Create a table of characters 
+CREATE TABLE characters (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    name TEXT,
+    species TEXT,
+    is_mutant TEXT);
+
+INSERT INTO characters(name, species, is_mutant) VALUES("Donatello", "Turtle", "Yes");
+INSERT INTO characters(name, species, is_mutant) VALUES("Raphael", "Turtle", "Yes");
+INSERT INTO characters(name, species, is_mutant) VALUES("Michaelangelo", "Turtle", "Yes");
+INSERT INTO characters(name, species, is_mutant) VALUES("Leonardo", "Turtle", "Yes");
+INSERT INTO characters(name, species, is_mutant) VALUES("Casey Jones", "Human", "No");
+INSERT INTO characters(name, species, is_mutant) VALUES("April O'Niel", "Human", "No");
+INSERT INTO characters(name, species, is_mutant) VALUES("Splinter", "Rat", "Yes");
+INSERT INTO characters(name, species, is_mutant) VALUES("Shredder", "Human", "No");
+INSERT INTO characters(name, species, is_mutant) VALUES("Krang", "Utrom", "No");
+
+--create a table of potential roles characters may have
+CREATE TABLE roles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role TEXT);
+
+INSERT INTO roles(role) VALUES("Hero");
+INSERT INTO roles(role) VALUES("Villain");
+INSERT INTO roles(role) VALUES("Ninja");
+INSERT INTO roles(role) VALUES("Sensei");
+INSERT INTO roles(role) VALUES("Vigilante");
+INSERT INTO roles(role) VALUES("Student");
+INSERT INTO roles(role) VALUES("Reporter");
+INSERT INTO roles(role) VALUES("Scientist");
+INSERT INTO roles(role) VALUES("Dictator");
+
+-- create a table storing which characters have which roles
+CREATE TABLE characterRoles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    character_id INTEGER,
+    role1_id INTEGER,
+    role2_id INTEGER,
+    role3_id INTEGER
+);
+
+INSERT INTO characterRoles(character_id, role1_id) VALUES(5, 5);
+INSERT INTO characterRoles(character_id, role1_id, role2_id) VALUES(9, 2, 9), (7, 3, 4);
+INSERT INTO characterRoles(character_id, role1_id, role2_id, role3_id) VALUES(1, 1, 3, 6), (2, 1, 3, 6), (3, 1, 3, 6), (4, 1, 3, 6), (6, 6, 7, 8),(8, 2, 3, 4);
+
+-- create a table of potential teams characters may be affiliated with
+CREATE TABLE teams (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT);
+
+INSERT INTO teams(name) VALUES("The Foot Clan"), ("The Utrom Empire"), ("Teenage Mutant Ninja Turtles"), ("Mutanimals");
+
+-- create a table to store character, role, team, family, and romantic affiliations
+CREATE TABLE affiliation (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    character_id INTEGER,
+    team_id TEXT,
+    team2_id TEXT,
+    family1_id TEXT,
+    family2_id TEXT,
+    family3_id TEXT,
+    family4_id TEXT,
+    significant_other_id TEXT);
+
+INSERT INTO affiliation(character_id, team_id, family1_id, family2_id, family3_id, family4_id) VALUES(1, 3, 2, 3, 4, 7), (2, 3, 1, 3, 4, 7), (3, 3, 1, 2, 4, 7), (4, 3, 1, 2, 3, 7);
+INSERT INTO affiliation(character_id, team_id, team2_id, family1_id, family2_id, family3_id, family4_id) VALUES(7, 1, 3, 1, 2, 3, 4);
+INSERT INTO affiliation(character_id, team_id, significant_other_id) VALUES(5, 3, 6), (6, 3, 5);
+INSERT INTO affiliation(character_id, team_id) VALUES(8, 1), (9, 2);
+
+-- join and display all this information in a single human readable table
+SELECT a.name, a.species, r1.role, r2.role  AS "role 2", r3.role  AS "role 3", team1.name AS "team", team2.name AS "team 2",b.name AS "family 1", c.name AS "family 2", d.name AS "family 3", e.name AS "family 4", g.name AS "significant other", a.is_mutant AS "mutant?"
+    FROM characters a
+    JOIN teams team1
+        ON team1.id = affiliation.team_id
+    JOIN affiliation
+        ON a.id = affiliation.character_id
+    JOIN characterRoles
+        ON characterRoles.character_id = a.id
+    LEFT JOIN roles r1
+        ON r1.id = characterRoles.role1_id
+    LEFT JOIN roles r2
+        ON r2.id = characterRoles.role2_id
+    LEFT JOIN roles r3
+        ON r3.id = characterRoles.role3_id
+    LEFT JOIN teams team2
+        ON team2.id = affiliation.team2_id
+    LEFT JOIN characters b
+        ON b.id = affiliation.family1_id
+    LEFT JOIN characters c
+        ON c.id = affiliation.family2_id
+    LEFT JOIN characters d
+        ON d.id = affiliation.family3_id
+    LEFT JOIN characters e
+        ON e.id = affiliation.family4_id
+    LEFT JOIN characters f
+        on f.id = affiliation.team_id
+    LEFT JOIN characters g
+        ON g.id = affiliation.significant_other_id;
+
+-- show characters who are ninja
+SELECT characters.name,
+    CASE
+        WHEN characterRoles.role1_id = 3 THEN "Yes"
+        WHEN characterRoles.role2_id = 3 THEN "Yes"
+        WHEN characterRoles.role3_id = 3 THEN "Yes"
+    END AS "ninja"
+FROM characters 
+LEFT JOIN characterRoles
+    ON characterRoles.character_id = characters.id
+    GROUP BY name HAVING ninja IS NOT NULL;
+    
+-- display characters who have a significant other and who that SO is
+Select a.name, b.name AS "significant other"
+FROM characters a
+JOIN characters b
+    ON affiliation.significant_other_id = b.id
+JOIN affiliation
+    ON affiliation.significant_other_id = a.id;
