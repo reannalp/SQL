@@ -1,0 +1,27 @@
+-- create the shop table
+CREATE TABLE hobbyshop (id INTEGER PRIMARY KEY, item TEXT, description TEXT, price INTEGER, inventory INTEGER);
+
+INSERT INTO hobbyshop VALUES(1, "Sticker", "A funny fandom sticker", 2, 25);
+INSERT INTO hobbyshop VALUES(2, "Anime T-Shirt", "A t-shirt with an anime character.", 25, 8);
+INSERT INTO hobbyshop VALUES(3, "Keychain", "An acrylic keychain.", 10, 3);
+INSERT INTO hobbyshop VALUES(4, "Beanie", "A knit hat", 15, 0);
+INSERT INTO hobbyshop VALUES(5, "Cap", "A baseball cap resembling a character's", 25, 12);
+INSERT INTO hobbyshop VALUES(6, "Waifu Poster", "An 11x17 poster", 10, 5);
+INSERT INTO hobbyshop VALUES(7, "Husbando Poster", "An 11x17 poster", 10, 4);
+INSERT INTO hobbyshop VALUES(8, "Fandom T-Shirt", "A t-shirt with a TV character design", 25, 2);
+INSERT INTO hobbyshop VALUES(9, "Sci-Fi Lunchbox", "A vintage lunchbox", 17, 1);
+INSERT INTO hobbyshop VALUES(10, "Sci-Fi Poster", "A poster with a retro design.", 10, 2);
+INSERT INTO hobbyshop VALUES(11, "Comic T-Shirt", "A t-shirt with a comic design.", 25, 13);
+INSERT INTO hobbyshop VALUES(12, "Bumper Sticker", "A vinyl car decal with the logo from a popular movie.", 12, 35);
+INSERT INTO hobbyshop VALUES(13, "Plushie", "A kawaii plushie", 18, 1);
+INSERT INTO hobbyshop VALUES(14, "Limited Art Print", "A limited edition art print.", 100, 5);
+INSERT INTO hobbyshop VALUES(15, "Enamel pin", "A hard enamel pin of a popular character", 12, 20);
+
+-- display items in order by price
+SELECT * from hobbyshop ORDER BY price;
+
+-- display the full number of items in the entire inventory
+SELECT SUM(inventory) from hobbyshop;
+
+-- display any items that are currently out of stock
+SELECT item from hobbyshop WHERE inventory=0;
