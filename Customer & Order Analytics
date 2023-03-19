@@ -50,3 +50,19 @@ LEFT JOIN customers
     ON customers.order_id = FebSales.orderID
 WHERE FebSales.Quantity > 2
 AND length(orderID) = 6;
+
+-- Find what battery products are in the database
+SELECT distinct Product
+FROM BIT_DB.FebSales
+WHERE Product like '%Batteries%';
+
+-- Find all the products with prices ending in .99
+SELECT distinct Product, Price
+FROM BIT_DB.FebSales 
+WHERE Price like '%.99';
+
+-- List all the products sold in Los Angeles in February, and include how many of each were sold. 
+SELECT product, sum(quantity)
+FROM FebSales
+WHERE location LIKE '%Los Angeles%'
+GROUP BY product;
