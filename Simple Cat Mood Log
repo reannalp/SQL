@@ -1,0 +1,33 @@
+-- create a table for users
+CREATE TABLE users (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+name TEXT,
+email TEXT
+);
+
+-- a table of logs
+CREATE TABLE mood_log (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+user_id INTEGER,
+mood TEXT,
+timestamp INTEGER,
+notes TEXT
+);
+
+INSERT INTO users (name, email) VALUES("Neb Fluffybottom","niblet@gmail.com");
+INSERT INTO users (name, email) VALUES ("KHAN","yellit@gmail.com");
+INSERT INTO users (name, email) VALUES ("Cirilla", "princessciri@gmail.com");
+
+-- three cats enter their moods!
+INSERT INTO mood_log (user_id, mood, timestamp, notes) VALUES("2","Chill","1679015331","Had some catnip.");
+INSERT INTO mood_log (user_id, mood, timestamp, notes) VALUES("1","Bitey","1679015465","Someone touched my tail.");
+INSERT INTO mood_log (user_id, mood, timestamp, notes) VALUES("3","Thriving","1679015480","Just smelled a disgusting sponge.");
+SELECT * FROM mood_log;
+
+-- Cirilla is upset and wants to delete her log
+DELETE FROM mood_log WHERE id = 3;
+INSERT INTO mood_log (user_id, mood, timestamp, notes) VALUES("3","Angy","1679015800","Human took sponge :(");
+SELECT * FROM mood_log;
+-- Cirilla was so upset she made a typo, here she fixes it
+UPDATE mood_log SET mood = "Angry" WHERE mood = "Angy";
+SELECT * FROM mood_log;
