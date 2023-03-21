@@ -41,3 +41,16 @@ GROUP BY artist_name HAVING count(track_id)>1;
 -- What's the shortest song?
 SELECT track_name, artist_name, MIN(time(duration_ms/1000, 'unixepoch')) AS duration
 FROM spotifydata;
+
+# Find who the "Top Stars" are 
+-- Here I use a CTE to calculate and store average popularity 
+WITH pop_average AS (
+ SELECT spotifydata.artist_name,
+ AVG(spotifydata.popularity) AS average_pop
+ FROM spotifydata
+ GROUP BY spotifydata.artist_name
+)
+-- display the artist name, average popularity, and a label showing they're a 'Top Star'
+SELECT artist_name, average_pop, 'Top Star' AS label
+FROM pop_average
+WHERE average_pop >=90;
